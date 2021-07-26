@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongPlayHistory", "SongPlayHistory\SongPlayHistory.csproj", "{A27CE832-9835-494F-BCD9-1D8A4A0F90ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SongPlayHistoryContinued", "SongPlayHistory\SongPlayHistoryContinued.csproj", "{A27CE832-9835-494F-BCD9-1D8A4A0F90ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongPlayHistory.UnitTest", "SongPlayHistory.UnitTest\SongPlayHistory.UnitTest.csproj", "{9C2AE911-BA20-49F2-B61C-9581DEAD962A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SongPlayHistory.UnitTest", "SongPlayHistory.UnitTest\SongPlayHistory.UnitTest.csproj", "{9C2AE911-BA20-49F2-B61C-9581DEAD962A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

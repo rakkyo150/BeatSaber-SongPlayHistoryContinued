@@ -12,7 +12,7 @@
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SongPlayHistory\SongPlayHistory.csproj" />
+    <ProjectReference Include="..\SongPlayHistory\SongPlayHistoryContinued.csproj" />
     <Reference Include="IPA.Loader">
       <HintPath>$(BeatSaberDir)\IPA\Data\Managed\IPA.Loader.dll</HintPath>
     </Reference>
