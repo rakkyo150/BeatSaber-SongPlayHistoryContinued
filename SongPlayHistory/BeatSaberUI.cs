@@ -3,7 +3,7 @@ using HMUI;
 using System.Linq;
 using UnityEngine;
 
-namespace SongPlayHistory
+namespace SongPlayHistoryContinued
 {
     internal static class BeatSaberUI
     {
@@ -40,7 +40,7 @@ namespace SongPlayHistory
                 else
                 {
                     var parent = Resources.FindObjectsOfTypeAll<GameServerLobbyFlowCoordinator>().LastOrDefault();
-                    _flowCoordinator = parent?.GetPrivateField<MultiplayerLevelSelectionFlowCoordinator>("multiplayerLevelSelectionFlowCoordinator");
+                    _flowCoordinator = parent?.GetPrivateField<MultiplayerLevelSelectionFlowCoordinator>("_multiplayerLevelSelectionFlowCoordinator");
                 }
 
                 var levelSelectionNavController = _flowCoordinator?.GetPrivateField<LevelSelectionNavigationController>("levelSelectionNavigationController");
