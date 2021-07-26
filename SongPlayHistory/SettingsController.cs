@@ -1,6 +1,6 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 
-namespace SongPlayHistory
+namespace SongPlayHistoryContinued
 {
     public class SettingsController : PersistentSingleton<SettingsController>
     {

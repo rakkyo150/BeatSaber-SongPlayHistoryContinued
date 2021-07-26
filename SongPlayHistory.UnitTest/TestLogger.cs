@@ -1,7 +1,7 @@
 ﻿using IPA.Logging;
 using Xunit.Abstractions;
 
-namespace SongPlayHistory.UnitTest
+namespace SongPlayHistoryContinued.UnitTest
 {
     internal class TestLogger : Logger
     {

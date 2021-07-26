@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace SongPlayHistory
+namespace SongPlayHistoryContinued
 {
     [Plugin(RuntimeOptions.SingleStartInit)]
     public class Plugin
@@ -30,7 +30,7 @@ namespace SongPlayHistory
             _harmony = new Harmony(HarmonyId);
 
             PluginConfig.Instance = config.Generated<PluginConfig>();
-            BSMLSettings.instance.AddSettingsMenu("Song Play History", $"SongPlayHistory.Settings.bsml", SettingsController.instance);
+            BSMLSettings.instance.AddSettingsMenu("Song Play History", $"SongPlayHistoryContinued.Settings.bsml", SettingsController.instance);
 
             SPHModel.InitializeRecords();
         }

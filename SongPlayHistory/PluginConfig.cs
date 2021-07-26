@@ -1,4 +1,4 @@
-﻿namespace SongPlayHistory
+﻿namespace SongPlayHistoryContinued
 {
     public class PluginConfig
     {

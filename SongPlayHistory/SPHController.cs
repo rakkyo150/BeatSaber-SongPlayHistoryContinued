@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SongPlayHistory
+namespace SongPlayHistoryContinued
 {
     internal class SPHController : MonoBehaviour
     {

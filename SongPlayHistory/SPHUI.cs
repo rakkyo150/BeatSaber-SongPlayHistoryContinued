@@ -10,7 +10,7 @@ using UnityEngine;
 using VRUIControls;
 using static UnityEngine.Object;
 
-namespace SongPlayHistory
+namespace SongPlayHistoryContinued
 {
     internal class SPHUI
     {

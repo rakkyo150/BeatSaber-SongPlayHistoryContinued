@@ -5,7 +5,7 @@ using System.IO;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SongPlayHistory.UnitTest
+namespace SongPlayHistoryContinued.UnitTest
 {
     /// <summary>
     /// Unit tests for static file I/O methods in <see cref="SPHModel"/>.
