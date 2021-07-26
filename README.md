@@ -16,8 +16,7 @@ Track all your scores. This is a fork of the currently unmaintained [SongPlayHis
 
 ## Installation
 
-- Copy [SongPlayHistory.dll](https://github.com/Shadnix-was-taken/BeatSaber-SongPlayHistoryContinued/releases) to Beat Saber's _Plugins_ directory (Requires _BS Utils_, _BeatSaberMarkupLanguage_)
-- Also available on [BeatMods](https://beatmods.com/#/mods) (Use [ModAssistant](https://github.com/Assistant/ModAssistant))
+- Copy [SongPlayHistoryContinued.dll](https://github.com/Shadnix-was-taken/BeatSaber-SongPlayHistoryContinued/releases) to Beat Saber's _Plugins_ directory (Requires _BS Utils_, _BeatSaberMarkupLanguage_)
 
 ## Notes
 
