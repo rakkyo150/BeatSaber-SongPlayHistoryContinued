@@ -136,7 +136,7 @@ namespace SongPlayHistoryContinued
             {
                 List<Record> truncated = records.Take(10).ToList();
 
-                var notesCount = beatmap.beatmapData.cuttableNotesType;
+                var notesCount = beatmap.beatmapData.cuttableNotesCount;
                 var maxScore = ScoreModel.MaxRawScoreForNumberOfNotes(notesCount);
                 var builder = new StringBuilder(200);
 
@@ -244,7 +244,7 @@ namespace SongPlayHistoryContinued
                 var maxCombo = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "MaxCombo");
                 var highscore = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "Highscore");
                 var maxRank = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "MaxRank");
-                var notesCount = beatmap.beatmapData.cuttableNotesType;
+                var notesCount = beatmap.beatmapData.cuttableNotesCount;
                 var maxScore = ScoreModel.MaxRawScoreForNumberOfNotes(notesCount);
                 var estimatedAcc = stats.highScore / (float)maxScore * 100f;
                 SetValue(maxCombo, stats.validScore ? $"{stats.maxCombo}" : "-");
