@@ -118,7 +118,7 @@
   <ItemGroup>
     <PackageReference Include="BeatSaberModdingTools.Tasks">
       <Version>1.4.3</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <IncludeAssets>build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
