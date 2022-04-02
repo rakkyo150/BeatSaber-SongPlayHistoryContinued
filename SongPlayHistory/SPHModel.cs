@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using IPA.Utilities;
 
 namespace SongPlayHistoryContinued
 {
@@ -144,7 +145,7 @@ namespace SongPlayHistoryContinued
             {
                 return null;
             }
-            var playerDataModel = BeatSaberUI.LevelDetailViewController.GetPrivateField<PlayerDataModel>("_playerDataModel");
+            var playerDataModel = BeatSaberUI.LevelDetailViewController.GetField<PlayerDataModel, StandardLevelDetailViewController>("_playerDataModel");
             var statsList = playerDataModel.playerData.levelsStatsData;
             var stats = statsList?.FirstOrDefault(x => x.levelID == beatmap.level.levelID && x.difficulty == beatmap.difficulty);
             if (stats == null)

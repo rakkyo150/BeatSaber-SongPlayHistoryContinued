@@ -86,7 +86,7 @@ namespace SongPlayHistoryContinued
                     hoverHint.text = "";
                 }
                 var hoverHintController = Resources.FindObjectsOfTypeAll<HoverHintController>().First();
-                hoverHint.SetPrivateField("_hoverHintController", hoverHintController);
+                hoverHint.SetField("_hoverHintController", hoverHintController);
                 return hoverHint;
             }
         }

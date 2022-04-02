@@ -1,4 +1,4 @@
-﻿using BS_Utils.Utilities;
+﻿using IPA.Utilities;
 using HMUI;
 using System.Linq;
 using UnityEngine;
@@ -33,23 +33,23 @@ namespace SongPlayHistoryContinued
                 {
                     _flowCoordinator = Resources.FindObjectsOfTypeAll<SoloFreePlayFlowCoordinator>().LastOrDefault();
 
-                    ResultsViewController = _flowCoordinator?.GetPrivateField<ResultsViewController>("_resultsViewController");
-                    var leaderboardViewController = _flowCoordinator?.GetPrivateField<PlatformLeaderboardViewController>("_platformLeaderboardViewController");
-                    LeaderboardLevelStatsView = leaderboardViewController?.GetPrivateField<LevelStatsView>("_levelStatsView");
+                    ResultsViewController = _flowCoordinator?.GetField<ResultsViewController, LevelSelectionFlowCoordinator>("_resultsViewController");
+                    var leaderboardViewController = _flowCoordinator?.GetField<PlatformLeaderboardViewController, LevelSelectionFlowCoordinator>("_platformLeaderboardViewController");
+                    LeaderboardLevelStatsView = leaderboardViewController?.GetField<LevelStatsView, PlatformLeaderboardViewController>("_levelStatsView");
                 }
                 else
                 {
                     var parent = Resources.FindObjectsOfTypeAll<GameServerLobbyFlowCoordinator>().LastOrDefault();
-                    _flowCoordinator = parent?.GetPrivateField<MultiplayerLevelSelectionFlowCoordinator>("_multiplayerLevelSelectionFlowCoordinator");
+                    _flowCoordinator = parent?.GetField<MultiplayerLevelSelectionFlowCoordinator, GameServerLobbyFlowCoordinator>("_multiplayerLevelSelectionFlowCoordinator");
                 }
 
-                var levelSelectionNavController = _flowCoordinator?.GetPrivateField<LevelSelectionNavigationController>("levelSelectionNavigationController");
-                var levelCollectionNavController = levelSelectionNavController?.GetPrivateField<LevelCollectionNavigationController>("_levelCollectionNavigationController");
-                LevelDetailViewController = levelCollectionNavController?.GetPrivateField<StandardLevelDetailViewController>("_levelDetailViewController");
-                var levelDetailView = LevelDetailViewController?.GetPrivateField<StandardLevelDetailView>("_standardLevelDetailView");
-                LevelParamsPanel = levelDetailView?.GetPrivateField<LevelParamsPanel>("_levelParamsPanel");
-                var levelCollectionViewController = levelCollectionNavController?.GetPrivateField<LevelCollectionViewController>("_levelCollectionViewController");
-                LevelCollectionTableView = levelCollectionViewController?.GetPrivateField<LevelCollectionTableView>("_levelCollectionTableView");
+                var levelSelectionNavController = _flowCoordinator?.GetField<LevelSelectionNavigationController, LevelSelectionFlowCoordinator>("levelSelectionNavigationController");
+                var levelCollectionNavController = levelSelectionNavController?.GetField<LevelCollectionNavigationController, LevelSelectionNavigationController>("_levelCollectionNavigationController");
+                LevelDetailViewController = levelCollectionNavController?.GetField<StandardLevelDetailViewController, LevelCollectionNavigationController>("_levelDetailViewController");
+                var levelDetailView = LevelDetailViewController?.GetField<StandardLevelDetailView, StandardLevelDetailViewController>("_standardLevelDetailView");
+                LevelParamsPanel = levelDetailView?.GetField<LevelParamsPanel, StandardLevelDetailView>("_levelParamsPanel");
+                var levelCollectionViewController = levelCollectionNavController?.GetField<LevelCollectionViewController, LevelCollectionNavigationController>("_levelCollectionViewController");
+                LevelCollectionTableView = levelCollectionViewController?.GetField<LevelCollectionTableView, LevelCollectionViewController>("_levelCollectionTableView");
             }
         }
 
@@ -57,7 +57,7 @@ namespace SongPlayHistoryContinued
         {
             if (IsValid)
             {
-                LevelCollectionTableView?.GetPrivateField<TableView>("_tableView")?.RefreshCellsContent();
+                LevelCollectionTableView?.GetField<TableView, LevelCollectionTableView>("_tableView")?.RefreshCellsContent();
             }
         }
     }
