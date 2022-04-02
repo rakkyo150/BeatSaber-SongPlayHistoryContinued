@@ -32,9 +32,9 @@ namespace SongPlayHistoryContinued
                 if (value)
                 {
                     _flowCoordinator = Resources.FindObjectsOfTypeAll<SoloFreePlayFlowCoordinator>().LastOrDefault();
-
-                    ResultsViewController = _flowCoordinator?.GetField<ResultsViewController, LevelSelectionFlowCoordinator>("_resultsViewController");
-                    var leaderboardViewController = _flowCoordinator?.GetField<PlatformLeaderboardViewController, LevelSelectionFlowCoordinator>("_platformLeaderboardViewController");
+                    
+                    ResultsViewController = (_flowCoordinator as SoloFreePlayFlowCoordinator)?.GetField<ResultsViewController, SoloFreePlayFlowCoordinator>("_resultsViewController");
+                    var leaderboardViewController = (_flowCoordinator as SoloFreePlayFlowCoordinator)?.GetField<PlatformLeaderboardViewController, SoloFreePlayFlowCoordinator>("_platformLeaderboardViewController");
                     LeaderboardLevelStatsView = leaderboardViewController?.GetField<LevelStatsView, PlatformLeaderboardViewController>("_levelStatsView");
                 }
                 else
