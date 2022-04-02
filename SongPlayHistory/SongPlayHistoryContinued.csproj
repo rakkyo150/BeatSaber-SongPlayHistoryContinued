@@ -130,8 +130,9 @@
     <ErrorOnMismatchedVersions Condition="'$(Configuration)' == 'Release'">True</ErrorOnMismatchedVersions>
   </PropertyGroup>
   <Target Name="CopyToPlugins" AfterTargets="Build" Condition="'$(NCrunch)' != '1'">
-    <Message Text="Copying $(OutputAssemblyName).dll to IPA\Pending\Plugins folder" Importance="high" />
+    <Message Text="Copying $(OutputAssemblyName).dll and $(OutputAssemblyName).pdb to IPA\Pending\Plugins folder" Importance="high" />
     <Copy SourceFiles="$(OutputAssemblyName).dll" DestinationFiles="$(BeatSaberDir)\IPA\Pending\Plugins\$(AssemblyName).dll" />
+    <Copy SourceFiles="$(OutputAssemblyName).pdb" DestinationFiles="$(BeatSaberDir)\IPA\Pending\Plugins\$(AssemblyName).pdb" />
   </Target>
   <Target Name="GetProjectInfo" AfterTargets="BeforeBuild" Condition="'$(BSMTTaskAssembly)' != ''">
     <GetManifestInfo ManifestPath="manifest.json">
