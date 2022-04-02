@@ -137,6 +137,7 @@ namespace SongPlayHistoryContinued
                 List<Record> truncated = records.Take(10).ToList();
 
                 var beatmapData = await beatmap.GetBeatmapDataAsync(beatmap.GetEnvironmentInfo(), playerData.playerSpecificSettings);
+                var notesCount = beatmapData.cuttableNotesCount;
                 var maxScore = ScoreModel.ComputeMaxMultipliedScoreForBeatmap(beatmapData);
                 var builder = new StringBuilder(200);
 
@@ -183,9 +184,25 @@ namespace SongPlayHistoryContinued
                 foreach (var r in truncated)
                 {
                     var localDateTime = DateTimeOffset.FromUnixTimeMilliseconds(r.Date).LocalDateTime;
-                    var adjMaxScore = ScoreModel.MaxRawScoreForNumberOfNotes(r.LastNote);
-                    var denom = PluginConfig.Instance.AverageAccuracy && r.LastNote > 0 ? adjMaxScore : maxScore;
-                    var accuracy = r.RawScore / (float)denom * 100f;
+                    
+                    /*
+                     * To get a max possible score of an unfinished level, we need _transformedBeatmapData from ResultsViewController
+                     * Then put it through ScoreModel.ComputeMaxMultipliedScoreForBeatmap
+                     * So there is no way of recovering it from the data we stored in SongPlayData.json
+                     */
+                    
+                    // var adjMaxScore = ScoreModel.MaxRawScoreForNumberOfNotes(r.LastNote);
+                    // var denom = PluginConfig.Instance.AverageAccuracy && r.LastNote > 0 ? adjMaxScore : maxScore;
+                    // var accuracy = r.RawScore / (float)denom * 100f;
+                    
+                    /*
+                     * One possible solution is to store the max possible score when a level finish,
+                     * Then we just use previous saved max score to calculate acc
+                     */
+
+                    var levelFinished = r.LastNote > 0;
+                    var accuracy = r.RawScore / (float) maxScore;
+
                     var param = ConcatParam((Param)r.Param);
                     if (param.Length == 0 && r.RawScore != r.ModifiedScore)
                     {
@@ -196,7 +213,12 @@ namespace SongPlayHistoryContinued
                     builder.Append(Space(truncated.Count - truncated.IndexOf(r) - 1));
                     builder.Append($"<size=2.5><color=#1a252bff>{localDateTime:d}</color></size>");
                     builder.Append($"<size=3.5><color=#0f4c75ff> {r.ModifiedScore}</color></size>");
-                    builder.Append($"<size=3.5><color=#368cc6ff> {accuracy:0.00}%</color></size>");
+                    if (levelFinished)
+                    {
+                        // only display acc if the record is a finished level
+                        builder.Append($"<size=3.5><color=#368cc6ff> {accuracy:0.00}%</color></size>");
+
+                    }
                     if (param.Length > 0)
                     {
                         builder.Append($"<size=2><color=#1a252bff> {param}</color></size>");
