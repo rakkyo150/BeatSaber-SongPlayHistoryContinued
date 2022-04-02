@@ -123,7 +123,7 @@ namespace SongPlayHistoryContinued
                 else if (!enabled && Harmony.HasAnyPatches(HarmonyId))
                 {
                     Log.Info("Removing Harmony patches...");
-                    _harmony.UnpatchAll(HarmonyId);
+                    _harmony.UnpatchSelf();
 
                     SetDataFromLevelAsync.OnUnpatch();
                 }
