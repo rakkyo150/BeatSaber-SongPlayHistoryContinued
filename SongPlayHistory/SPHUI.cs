@@ -195,13 +195,14 @@ namespace SongPlayHistoryContinued
                     // var denom = PluginConfig.Instance.AverageAccuracy && r.LastNote > 0 ? adjMaxScore : maxScore;
                     // var accuracy = r.RawScore / (float)denom * 100f;
                     
+                    var levelFinished = r.LastNote < 0;
+                    var accuracy = r.RawScore / (float) maxScore * 100f;
+                    
                     /*
-                     * One possible solution is to store the max possible score when a level finish,
-                     * Then we just use previous saved max score to calculate acc
+                     * One possible solution is to get the max possible score when a level finish as mentioned above,
+                     * And store it in SongPlayData.json along all other things.
+                     * Then we can just use this saved max score to calculate acc
                      */
-
-                    var levelFinished = r.LastNote > 0;
-                    var accuracy = r.RawScore / (float) maxScore;
 
                     var param = ConcatParam((Param)r.Param);
                     if (param.Length == 0 && r.RawScore != r.ModifiedScore)
