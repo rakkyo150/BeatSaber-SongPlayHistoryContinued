@@ -80,8 +80,8 @@ namespace SongPlayHistoryContinued
                 return;
             }
 
-            // Cancelled?
-            if (result.levelEndStateType == LevelCompletionResults.LevelEndStateType.None)
+            // Cancelled.
+            if (result.levelEndStateType == LevelCompletionResults.LevelEndStateType.Incomplete)
             {
                 return;
             }
@@ -119,7 +119,7 @@ namespace SongPlayHistoryContinued
             {
                 Date = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                 ModifiedScore = result.modifiedScore,
-                RawScore = result.rawScore,
+                RawScore = result.multipliedScore,
                 LastNote = cleared ? -1 : result.goodCutsCount + result.badCutsCount + result.missedCount,
                 Param = (int)param
             };
@@ -153,6 +153,16 @@ namespace SongPlayHistoryContinued
                 Plugin.Log?.Warn($"{nameof(PlayerLevelStatsData)} not found for {beatmap.level.levelID} - {beatmap.difficulty}.");
             }
             return stats;
+        }
+        
+        public static PlayerData GetPlayerData()
+        {
+            if (!BeatSaberUI.IsValid)
+            {
+                return null;
+            }
+            var playerDataModel = BeatSaberUI.LevelDetailViewController.GetField<PlayerDataModel, StandardLevelDetailViewController>("_playerDataModel");
+            return playerDataModel.playerData;
         }
 
         public static bool ScanVoteData()

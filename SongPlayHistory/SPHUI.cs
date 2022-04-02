@@ -125,9 +125,9 @@ namespace SongPlayHistoryContinued
             }
         }
 
-        public void SetRecords(IDifficultyBeatmap beatmap, List<Record> records)
+        public async void SetRecords(IDifficultyBeatmap beatmap, PlayerData playerData, List<Record> records)
         {
-            if (HoverHint == null || beatmap == null)
+            if (HoverHint == null || beatmap == null || playerData == null)
             {
                 return;
             }
@@ -136,8 +136,8 @@ namespace SongPlayHistoryContinued
             {
                 List<Record> truncated = records.Take(10).ToList();
 
-                var notesCount = beatmap.beatmapData.cuttableNotesCount;
-                var maxScore = ScoreModel.MaxRawScoreForNumberOfNotes(notesCount);
+                var beatmapData = await beatmap.GetBeatmapDataAsync(beatmap.GetEnvironmentInfo(), playerData.playerSpecificSettings);
+                var maxScore = ScoreModel.ComputeMaxMultipliedScoreForBeatmap(beatmapData);
                 var builder = new StringBuilder(200);
 
                 static string ConcatParam(Param param)
@@ -222,7 +222,7 @@ namespace SongPlayHistoryContinued
             }
         }
 
-        public void SetStats(IDifficultyBeatmap beatmap, PlayerLevelStatsData stats)
+        public async void SetStats(IDifficultyBeatmap beatmap, PlayerLevelStatsData stats, PlayerData playerData)
         {
             if (beatmap == null || stats == null)
             {
@@ -244,8 +244,8 @@ namespace SongPlayHistoryContinued
                 var maxCombo = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "MaxCombo");
                 var highscore = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "Highscore");
                 var maxRank = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "MaxRank");
-                var notesCount = beatmap.beatmapData.cuttableNotesCount;
-                var maxScore = ScoreModel.MaxRawScoreForNumberOfNotes(notesCount);
+                var beatmapData = await beatmap.GetBeatmapDataAsync(beatmap.GetEnvironmentInfo(), playerData.playerSpecificSettings);
+                var maxScore = ScoreModel.ComputeMaxMultipliedScoreForBeatmap(beatmapData);
                 var estimatedAcc = stats.highScore / (float)maxScore * 100f;
                 SetValue(maxCombo, stats.validScore ? $"{stats.maxCombo}" : "-");
                 SetValue(highscore, stats.validScore ? $"{stats.highScore} ({estimatedAcc:0.00}%)" : "-");

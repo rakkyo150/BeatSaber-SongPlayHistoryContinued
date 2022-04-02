@@ -139,14 +139,15 @@ namespace SongPlayHistoryContinued
             Plugin.Log?.Info("Refreshing data...");
 
             var beatmap = BeatSaberUI.LevelDetailViewController?.selectedDifficultyBeatmap;
+            var playerData = SPHModel.GetPlayerData();
             if (beatmap == null)
             {
                 return;
             }
             try
             {
-                _pluginUI.SetRecords(beatmap, SPHModel.GetRecords(beatmap));
-                _pluginUI.SetStats(beatmap, SPHModel.GetPlayerStats(beatmap));
+                _pluginUI.SetRecords(beatmap, playerData, SPHModel.GetRecords(beatmap));
+                _pluginUI.SetStats(beatmap, SPHModel.GetPlayerStats(beatmap), playerData);
             }
             catch (Exception ex) // Any UnityException
             {
