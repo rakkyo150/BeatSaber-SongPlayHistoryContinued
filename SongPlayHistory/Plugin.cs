@@ -41,7 +41,6 @@ namespace SongPlayHistoryContinued
         {
             BSEvents.gameSceneLoaded += OnGameSceneLoaded;
             BSEvents.LevelFinished += OnLevelFinished;
-            // BS_Utils.Plugin.MultiLevelDidFinishEvent += OnMultilevelFinished;
 
             // Init after the menu scene is loaded.
             BSEvents.lateMenuSceneLoadedFresh += (o) =>
@@ -58,7 +57,6 @@ namespace SongPlayHistoryContinued
         {
             BSEvents.gameSceneLoaded -= OnGameSceneLoaded;
             BSEvents.LevelFinished -= OnLevelFinished;
-            // BS_Utils.Plugin.MultiLevelDidFinishEvent -= OnMultilevelFinished;
 
             SPHModel.BackupRecords();
         }
@@ -95,11 +93,6 @@ namespace SongPlayHistoryContinued
             }
             
         }
-
-        // private void OnMultilevelFinished(MultiplayerLevelScenesTransitionSetupDataSO scene, LevelCompletionResults result, IReadOnlyList<MultiplayerPlayerResultsData> _)
-        // {
-        //     SaveRecord(scene?.difficultyBeatmap, result, true);
-        // }
 
         private void SaveRecord(IDifficultyBeatmap beatmap, LevelCompletionResults result, bool isMultiplayer)
         {
