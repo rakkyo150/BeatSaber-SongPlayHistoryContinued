@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
-    <BeatSaberDir>$(ProjectDir)..\SongPlayHistory\References</BeatSaberDir>
+    <BeatSaberDir>$(BeatSaberDir)</BeatSaberDir>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
