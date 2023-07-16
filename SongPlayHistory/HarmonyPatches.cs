@@ -10,7 +10,7 @@ using static UnityEngine.Object;
 namespace SongPlayHistoryContinued
 {
     [HarmonyPatch(typeof(LevelListTableCell))]
-    [HarmonyPatch("SetDataFromLevelAsync", new Type[] { typeof(IPreviewBeatmapLevel), typeof(bool) })]
+    [HarmonyPatch("SetDataFromLevelAsync", MethodType.Normal)]
     internal class SetDataFromLevelAsync
     {
         private static Sprite _thumbsUp;
@@ -97,14 +97,14 @@ namespace SongPlayHistoryContinued
     [HarmonyPatch("ShowStats", MethodType.Normal)]
     class LevelStatsViewPatches : LevelStatsView
     {
-        static void Postfix(ref LevelStatsViewPatches __instance)
+        static void Postfix(ref TextMeshProUGUI ____maxComboText)
         {
             Plugin.Log?.Debug("Change Max Combo text");
             var beatmap = BeatSaberUI.LevelDetailViewController?.selectedDifficultyBeatmap;
-            SetMaxComboAndMiss(beatmap, __instance);
+            SetMaxComboAndMiss(beatmap, ____maxComboText);
         }
 
-        static void SetMaxComboAndMiss(IDifficultyBeatmap beatmap, LevelStatsViewPatches __instance)
+        static void SetMaxComboAndMiss(IDifficultyBeatmap beatmap, TextMeshProUGUI ____maxComboText)
         {
             var config = PluginConfig.Instance;
             var stats = SPHModel.GetPlayerStats(beatmap);
@@ -128,7 +128,7 @@ namespace SongPlayHistoryContinued
             }
 
             string maxCombo = stats.validScore ? (stats.fullCombo ? "FULL COMBO" : $"{stats.maxCombo} ({records.First().Miss}miss)") : "-";
-            __instance._maxComboText.text = maxCombo;
+            ____maxComboText.text = maxCombo;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Util;
 
 namespace SongPlayHistoryContinued
 {
