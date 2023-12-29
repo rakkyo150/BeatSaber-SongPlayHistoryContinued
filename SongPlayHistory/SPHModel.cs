@@ -148,12 +148,12 @@ namespace SongPlayHistoryContinued
             }
             var playerDataModel = BeatSaberUI.LevelDetailViewController.GetField<PlayerDataModel, StandardLevelDetailViewController>("_playerDataModel");
             var statsList = playerDataModel.playerData.levelsStatsData;
-            var stats = statsList?.FirstOrDefault(x => x.levelID == beatmap.level.levelID && x.difficulty == beatmap.difficulty);
-            if (stats == null)
+            var stats = statsList.FirstOrDefault(x => x.Value.levelID == beatmap.level.levelID && x.Value.difficulty == beatmap.difficulty);
+            if (stats.Equals(default(KeyValuePair<int, string>)))
             {
                 Plugin.Log?.Warn($"{nameof(PlayerLevelStatsData)} not found for {beatmap.level.levelID} - {beatmap.difficulty}.");
             }
-            return stats;
+            return stats.Value;
         }
         
         public static PlayerData GetPlayerData()
