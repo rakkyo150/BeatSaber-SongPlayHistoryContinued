@@ -30,10 +30,10 @@ namespace SongPlayHistoryContinued
         /// </summary>
         private void Start()
         {
-            var soloButton = Resources.FindObjectsOfTypeAll<Button>().First(x => x.name == "SoloButton");
+            Button soloButton = Resources.FindObjectsOfTypeAll<Button>().First(x => x.name == "SoloButton");
             soloButton.onClick.AddListener(InitializeSolo);
 
-            var onlineButton = Resources.FindObjectsOfTypeAll<Button>().First(x => x.name == "OnlineButton");
+            Button onlineButton = Resources.FindObjectsOfTypeAll<Button>().First(x => x.name == "OnlineButton");
             onlineButton.onClick.AddListener(InitializeMultiplayer);
         }
 
@@ -138,8 +138,8 @@ namespace SongPlayHistoryContinued
         {
             Plugin.Log?.Info("Refreshing data...");
 
-            var beatmap = BeatSaberUI.LevelDetailViewController?.selectedDifficultyBeatmap;
-            var playerData = SPHModel.GetPlayerData();
+            IDifficultyBeatmap beatmap = BeatSaberUI.LevelDetailViewController?.selectedDifficultyBeatmap;
+            PlayerData playerData = SPHModel.GetPlayerData();
             if (beatmap == null)
             {
                 return;

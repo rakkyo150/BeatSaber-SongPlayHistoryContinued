@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using BS_Utils.Utilities;
-using HMUI;
+﻿using HMUI;
 using IPA.Utilities;
+using System.Linq;
 using UnityEngine;
 
 namespace SongPlayHistoryContinued
@@ -33,23 +32,23 @@ namespace SongPlayHistoryContinued
                 if (value)
                 {
                     _flowCoordinator = Resources.FindObjectsOfTypeAll<SoloFreePlayFlowCoordinator>().LastOrDefault();
-                    
+
                     ResultsViewController = (_flowCoordinator as SoloFreePlayFlowCoordinator)?.GetField<ResultsViewController, SoloFreePlayFlowCoordinator>("_resultsViewController");
-                    var leaderboardViewController = (_flowCoordinator as SoloFreePlayFlowCoordinator)?.GetField<PlatformLeaderboardViewController, SoloFreePlayFlowCoordinator>("_platformLeaderboardViewController");
+                    PlatformLeaderboardViewController leaderboardViewController = (_flowCoordinator as SoloFreePlayFlowCoordinator)?.GetField<PlatformLeaderboardViewController, SoloFreePlayFlowCoordinator>("_platformLeaderboardViewController");
                     LeaderboardLevelStatsView = leaderboardViewController?.GetField<LevelStatsView, PlatformLeaderboardViewController>("_levelStatsView");
                 }
                 else
                 {
-                    var parent = Resources.FindObjectsOfTypeAll<GameServerLobbyFlowCoordinator>().LastOrDefault();
+                    GameServerLobbyFlowCoordinator parent = Resources.FindObjectsOfTypeAll<GameServerLobbyFlowCoordinator>().LastOrDefault();
                     _flowCoordinator = parent?.GetField<MultiplayerLevelSelectionFlowCoordinator, GameServerLobbyFlowCoordinator>("_multiplayerLevelSelectionFlowCoordinator");
                 }
 
-                var levelSelectionNavController = _flowCoordinator?.GetField<LevelSelectionNavigationController, LevelSelectionFlowCoordinator>("levelSelectionNavigationController");
-                var levelCollectionNavController = levelSelectionNavController?.GetField<LevelCollectionNavigationController, LevelSelectionNavigationController>("_levelCollectionNavigationController");
+                LevelSelectionNavigationController levelSelectionNavController = _flowCoordinator?.GetField<LevelSelectionNavigationController, LevelSelectionFlowCoordinator>("levelSelectionNavigationController");
+                LevelCollectionNavigationController levelCollectionNavController = levelSelectionNavController?.GetField<LevelCollectionNavigationController, LevelSelectionNavigationController>("_levelCollectionNavigationController");
                 LevelDetailViewController = levelCollectionNavController?.GetField<StandardLevelDetailViewController, LevelCollectionNavigationController>("_levelDetailViewController");
-                var levelDetailView = LevelDetailViewController?.GetField<StandardLevelDetailView, StandardLevelDetailViewController>("_standardLevelDetailView");
+                StandardLevelDetailView levelDetailView = LevelDetailViewController?.GetField<StandardLevelDetailView, StandardLevelDetailViewController>("_standardLevelDetailView");
                 LevelParamsPanel = levelDetailView?.GetField<LevelParamsPanel, StandardLevelDetailView>("_levelParamsPanel");
-                var levelCollectionViewController = levelCollectionNavController?.GetField<LevelCollectionViewController, LevelCollectionNavigationController>("_levelCollectionViewController");
+                LevelCollectionViewController levelCollectionViewController = levelCollectionNavController?.GetField<LevelCollectionViewController, LevelCollectionNavigationController>("_levelCollectionViewController");
                 LevelCollectionTableView = levelCollectionViewController?.GetField<LevelCollectionTableView, LevelCollectionViewController>("_levelCollectionTableView");
             }
         }

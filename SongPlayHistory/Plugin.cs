@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using BeatSaberMarkupLanguage.Settings;
+﻿using BeatSaberMarkupLanguage.Settings;
 using BS_Utils.Gameplay;
+using BS_Utils.Utilities;
 using HarmonyLib;
 using IPA;
 using IPA.Config.Stores;
 using IPA.Logging;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using BS_Utils.Utilities;
 using Config = IPA.Config.Config;
 
 namespace SongPlayHistoryContinued
@@ -66,7 +62,7 @@ namespace SongPlayHistoryContinued
 
         private void OnGameSceneLoaded()
         {
-            var practiceSettings = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData?.practiceSettings;
+            PracticeSettings practiceSettings = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData?.practiceSettings;
             _isPractice = practiceSettings != null;
         }
 
@@ -77,11 +73,11 @@ namespace SongPlayHistoryContinued
                 return;
             }
 
-            var result = ((LevelFinishedWithResultsEventArgs)eventArgs).CompletionResults;
-            
+            LevelCompletionResults result = ((LevelFinishedWithResultsEventArgs)eventArgs).CompletionResults;
+
             if (eventArgs.LevelType == LevelType.Multiplayer)
             {
-                var beatmap = ((MultiplayerLevelScenesTransitionSetupDataSO)scene)?.difficultyBeatmap;
+                IDifficultyBeatmap beatmap = ((MultiplayerLevelScenesTransitionSetupDataSO)scene)?.difficultyBeatmap;
                 SaveRecord(beatmap, result, true);
             }
             else
@@ -91,10 +87,10 @@ namespace SongPlayHistoryContinued
                 {
                     return;
                 }
-                var beatmap = ((StandardLevelScenesTransitionSetupDataSO)scene)?.difficultyBeatmap;
+                IDifficultyBeatmap beatmap = ((StandardLevelScenesTransitionSetupDataSO)scene)?.difficultyBeatmap;
                 SaveRecord(beatmap, result, false);
             }
-            
+
         }
 
         private void SaveRecord(IDifficultyBeatmap beatmap, LevelCompletionResults result, bool isMultiplayer)
@@ -102,7 +98,7 @@ namespace SongPlayHistoryContinued
             if (result?.multipliedScore > 0)
             {
                 // Actually there's no way to know if any custom modifier was applied if the user failed a map.
-                var submissionDisabled = ScoreSubmission.WasDisabled || ScoreSubmission.Disabled || ScoreSubmission.ProlongedDisabled;
+                bool submissionDisabled = ScoreSubmission.WasDisabled || ScoreSubmission.Disabled || ScoreSubmission.ProlongedDisabled;
                 SPHModel.SaveRecord(beatmap, result, submissionDisabled, isMultiplayer);
             }
         }

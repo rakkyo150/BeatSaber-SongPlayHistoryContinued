@@ -26,7 +26,7 @@ namespace SongPlayHistoryContinued
                 {
                     if (_levelStatsView != null)
                     {
-                        var vc = _levelStatsView.GetComponentInParent<ViewController>();
+                        ViewController vc = _levelStatsView.GetComponentInParent<ViewController>();
                         Destroy(vc?.gameObject);
 
                         _levelStatsView = null;
@@ -37,14 +37,14 @@ namespace SongPlayHistoryContinued
                 {
                     if (_levelStatsView == null)
                     {
-                        var vc = new GameObject(
+                        ViewController vc = new GameObject(
                             "LevelStatsViewController",
                             typeof(VRGraphicRaycaster),
                             typeof(CurvedCanvasSettings),
                             typeof(CanvasGroup),
                             typeof(ViewController)).GetComponent<ViewController>();
-                        var mainMenu = Resources.FindObjectsOfTypeAll<MainMenuViewController>().First();
-                        var physicsRaycaster = mainMenu.GetComponent<VRGraphicRaycaster>()
+                        MainMenuViewController mainMenu = Resources.FindObjectsOfTypeAll<MainMenuViewController>().First();
+                        PhysicsRaycasterWithCache physicsRaycaster = mainMenu.GetComponent<VRGraphicRaycaster>()
                             .GetField<PhysicsRaycasterWithCache, VRGraphicRaycaster>("_physicsRaycaster");
                         vc.GetComponent<VRGraphicRaycaster>().SetField("_physicsRaycaster", physicsRaycaster);
                         vc.GetComponent<CurvedCanvasSettings>().SetRadius(154f);
@@ -52,7 +52,7 @@ namespace SongPlayHistoryContinued
                         vc.transform.AlignBottom(8f, -14f); // Room for SongBrowser.
                         vc.gameObject.SetActive(true);
 
-                        var template = Resources.FindObjectsOfTypeAll<LevelStatsView>().First();
+                        LevelStatsView template = Resources.FindObjectsOfTypeAll<LevelStatsView>().First();
                         _levelStatsView = Instantiate(template, vc.transform);
                         _levelStatsView.transform.MatchParent();
                     }
@@ -69,11 +69,11 @@ namespace SongPlayHistoryContinued
                 {
                     return null;
                 }
-                var hoverHint = LevelStatsView.GetComponentsInChildren<HoverHint>().FirstOrDefault(x => x.name == "HoverArea");
+                HoverHint hoverHint = LevelStatsView.GetComponentsInChildren<HoverHint>().FirstOrDefault(x => x.name == "HoverArea");
                 if (hoverHint == null)
                 {
-                    var template = BeatSaberUI.LevelParamsPanel.GetComponentsInChildren<RectTransform>().First(x => x.name == "NotesCount");
-                    var label = Instantiate(template, LevelStatsView.transform);
+                    RectTransform template = BeatSaberUI.LevelParamsPanel.GetComponentsInChildren<RectTransform>().First(x => x.name == "NotesCount");
+                    RectTransform label = Instantiate(template, LevelStatsView.transform);
                     label.name = "HoverArea";
                     label.transform.MatchParent();
                     Destroy(label.transform.Find("Icon").gameObject);
@@ -84,7 +84,7 @@ namespace SongPlayHistoryContinued
                     hoverHint = label.gameObject.AddComponent<HoverHint>();
                     hoverHint.text = "";
                 }
-                var hoverHintController = Resources.FindObjectsOfTypeAll<HoverHintController>().First();
+                HoverHintController hoverHintController = Resources.FindObjectsOfTypeAll<HoverHintController>().First();
                 hoverHint.SetField("_hoverHintController", hoverHintController);
                 return hoverHint;
             }
@@ -98,12 +98,12 @@ namespace SongPlayHistoryContinued
                 {
                     return null;
                 }
-                var playCount = LevelStatsView.GetComponentsInChildren<RectTransform>().FirstOrDefault(x => x.name == "PlayCount");
+                RectTransform playCount = LevelStatsView.GetComponentsInChildren<RectTransform>().FirstOrDefault(x => x.name == "PlayCount");
                 if (playCount == null)
                 {
-                    var maxCombo = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "MaxCombo");
-                    var highscore = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "Highscore");
-                    var maxRank = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "MaxRank");
+                    RectTransform maxCombo = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "MaxCombo");
+                    RectTransform highscore = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "Highscore");
+                    RectTransform maxRank = LevelStatsView.GetComponentsInChildren<RectTransform>().First(x => x.name == "MaxRank");
 
                     playCount = Instantiate(maxCombo, LevelStatsView.transform);
                     playCount.name = "PlayCount";
@@ -118,7 +118,7 @@ namespace SongPlayHistoryContinued
                     (playCount.transform as RectTransform).anchorMin = new Vector2(3 * w, .5f);
                     (playCount.transform as RectTransform).anchorMax = new Vector2(4 * w, .5f);
                 }
-                var title = playCount.GetComponentsInChildren<TextMeshProUGUI>().First(x => x.name == "Title");
+                TextMeshProUGUI title = playCount.GetComponentsInChildren<TextMeshProUGUI>().First(x => x.name == "Title");
                 title.SetText("Play Count");
                 return playCount;
             }
@@ -135,10 +135,10 @@ namespace SongPlayHistoryContinued
             {
                 List<Record> truncated = records.Take(10).ToList();
 
-                var beatmapData = await beatmap.GetBeatmapDataAsync(beatmap.GetEnvironmentInfo(), playerData.playerSpecificSettings);
-                var notesCount = beatmapData.cuttableNotesCount;
-                var maxScore = ScoreModel.ComputeMaxMultipliedScoreForBeatmap(beatmapData);
-                var builder = new StringBuilder(200);
+                IReadonlyBeatmapData beatmapData = await beatmap.GetBeatmapDataAsync(beatmap.GetEnvironmentInfo(), playerData.playerSpecificSettings);
+                int notesCount = beatmapData.cuttableNotesCount;
+                int maxScore = ScoreModel.ComputeMaxMultipliedScoreForBeatmap(beatmapData);
+                StringBuilder builder = new StringBuilder(200);
 
                 static string ConcatParam(Param param)
                 {
@@ -147,7 +147,7 @@ namespace SongPlayHistoryContinued
                         return "";
                     }
 
-                    var mods = new List<string>();
+                    List<string> mods = new List<string>();
                     if (param.HasFlag(Param.Multiplayer)) mods.Add("MULTI");
                     if (param.HasFlag(Param.BatteryEnergy)) mods.Add("BE");
                     if (param.HasFlag(Param.NoFail)) mods.Add("NF");
@@ -176,45 +176,45 @@ namespace SongPlayHistoryContinued
 
                 static string Space(int len)
                 {
-                    var space = string.Concat(Enumerable.Repeat("_", len));
+                    string space = string.Concat(Enumerable.Repeat("_", len));
                     return $"<size=1><color=#00000000>{space}</color></size>";
                 }
 
-                foreach (var r in truncated)
+                foreach (Record r in truncated)
                 {
-                    var localDateTime = DateTimeOffset.FromUnixTimeMilliseconds(r.Date).LocalDateTime;
-                    
+                    DateTime localDateTime = DateTimeOffset.FromUnixTimeMilliseconds(r.Date).LocalDateTime;
+
                     /*
                      * To get a max possible score of an unfinished level, we need _transformedBeatmapData from ResultsViewController
                      * Then put it through ScoreModel.ComputeMaxMultipliedScoreForBeatmap
                      * So there is no way of recovering it from the data we stored in SongPlayData.json
                      */
-                    
+
                     // var adjMaxScore = ScoreModel.MaxRawScoreForNumberOfNotes(r.LastNote);
                     // var denom = PluginConfig.Instance.AverageAccuracy && r.LastNote > 0 ? adjMaxScore : maxScore;
                     // var accuracy = r.RawScore / (float)denom * 100f;
-                    
-                    var levelFinished = r.LastNote < 0;
-                    var accuracy = r.RawScore / (float) maxScore * 100f;
-                    
+
+                    bool levelFinished = r.LastNote < 0;
+                    float accuracy = r.RawScore / (float)maxScore * 100f;
+
                     /*
                      * One possible solution is to get the max possible score when a level finish as mentioned above,
                      * And store it in SongPlayData.json along all other things.
                      * Then we can just use this saved max score to calculate acc
                      */
 
-                    var param = ConcatParam((Param)r.Param);
+                    string param = ConcatParam((Param)r.Param);
                     if (param.Length == 0 && r.RawScore != r.ModifiedScore)
                     {
                         param = "?!";
                     }
-                    var notesRemaining = notesCount - r.LastNote;
+                    int notesRemaining = notesCount - r.LastNote;
 
                     builder.Append(Space(truncated.Count - truncated.IndexOf(r) - 1));
                     builder.Append($"<size=2.5><color=#1a252bff>{localDateTime:d}</color></size>");
                     builder.Append($"<size=3.5><color=#0f4c75ff> {r.ModifiedScore}</color></size>");
                     builder.Append($"<size=3.5><color=#368cc6ff> {accuracy:0.00}%</color></size>");
-                    
+
                     if (r.Miss == "FC")
                     {
                         builder.Append($"<size=3.5><color=#e6b422ff> {r.Miss}</color></size>");
@@ -268,7 +268,7 @@ namespace SongPlayHistoryContinued
                 {
                     return;
                 }
-                var text = column.GetComponentsInChildren<TextMeshProUGUI>().First(x => x.name == "Value");
+                TextMeshProUGUI text = column.GetComponentsInChildren<TextMeshProUGUI>().First(x => x.name == "Value");
                 text.SetText(value);
             }
 
@@ -298,7 +298,7 @@ namespace SongPlayHistoryContinued
     {
         public static void MatchParent(this Transform transform)
         {
-            var rect = transform as RectTransform;
+            RectTransform rect = transform as RectTransform;
             if (rect == null)
             {
                 return;
@@ -311,7 +311,7 @@ namespace SongPlayHistoryContinued
 
         public static void AlignBottom(this Transform transform, float height, float margin)
         {
-            var rect = transform as RectTransform;
+            RectTransform rect = transform as RectTransform;
             if (rect == null)
             {
                 return;

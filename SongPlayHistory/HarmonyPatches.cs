@@ -1,7 +1,7 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Linq;
 using System.Reflection;
-using HarmonyLib;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,7 +35,7 @@ namespace SongPlayHistoryContinued
             }
 
             Image voteIcon = null;
-            foreach (var image in __instance.GetComponentsInChildren<Image>())
+            foreach (Image image in __instance.GetComponentsInChildren<Image>())
             {
                 // For performance reason, avoid using Linq.
                 if (image.name == "Vote")
@@ -53,7 +53,7 @@ namespace SongPlayHistoryContinued
             }
             voteIcon.enabled = false;
 
-            if (!isFavorite && SPHModel.Votes.TryGetValue(level.levelID.Replace("custom_level_", "").ToLower(), out var vote))
+            if (!isFavorite && SPHModel.Votes.TryGetValue(level.levelID.Replace("custom_level_", "").ToLower(), out UserVote vote))
             {
                 voteIcon.sprite = vote.voteType == "Upvote" ? _thumbsUp : _thumbsDown;
                 voteIcon.enabled = true;
@@ -62,7 +62,7 @@ namespace SongPlayHistoryContinued
 
         public static void OnUnpatch()
         {
-            foreach (var image in Resources.FindObjectsOfTypeAll<Image>())
+            foreach (Image image in Resources.FindObjectsOfTypeAll<Image>())
             {
                 if (image.name == "Vote")
                 {
@@ -75,14 +75,14 @@ namespace SongPlayHistoryContinued
         {
             try
             {
-                using var stream = Assembly.GetCallingAssembly().GetManifestResourceStream(resourcePath);
-                var resource = new byte[stream.Length];
+                using System.IO.Stream stream = Assembly.GetCallingAssembly().GetManifestResourceStream(resourcePath);
+                byte[] resource = new byte[stream.Length];
                 stream.Read(resource, 0, (int)stream.Length);
 
-                var texture = new Texture2D(2, 2);
+                Texture2D texture = new Texture2D(2, 2);
                 texture.LoadImage(resource);
 
-                var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
+                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
                 return sprite;
             }
             catch (Exception ex)
@@ -95,20 +95,20 @@ namespace SongPlayHistoryContinued
 
     [HarmonyPatch(typeof(LevelStatsView))]
     [HarmonyPatch("ShowStats", MethodType.Normal)]
-    class LevelStatsViewPatches : LevelStatsView
+    internal class LevelStatsViewPatches : LevelStatsView
     {
-        static void Postfix(ref TextMeshProUGUI ____maxComboText)
+        private static void Postfix(ref TextMeshProUGUI ____maxComboText)
         {
             Plugin.Log?.Debug("Change Max Combo text");
-            var beatmap = BeatSaberUI.LevelDetailViewController?.selectedDifficultyBeatmap;
+            IDifficultyBeatmap beatmap = BeatSaberUI.LevelDetailViewController?.selectedDifficultyBeatmap;
             SetMaxComboAndMiss(beatmap, ____maxComboText);
         }
 
-        static void SetMaxComboAndMiss(IDifficultyBeatmap beatmap, TextMeshProUGUI ____maxComboText)
+        private static void SetMaxComboAndMiss(IDifficultyBeatmap beatmap, TextMeshProUGUI ____maxComboText)
         {
-            var config = PluginConfig.Instance;
-            var stats = SPHModel.GetPlayerStats(beatmap);
-            var records = SPHModel.GetRecords(beatmap);
+            PluginConfig config = PluginConfig.Instance;
+            PlayerLevelStatsData stats = SPHModel.GetPlayerStats(beatmap);
+            System.Collections.Generic.List<Record> records = SPHModel.GetRecords(beatmap);
 
             if (beatmap == null)
             {
@@ -121,7 +121,7 @@ namespace SongPlayHistoryContinued
                 Plugin.Log?.Debug("No Play Records");
                 return;
             }
-            
+
             if (config.SortByDate)
             {
                 records = records.OrderByDescending(s => s.ModifiedScore).ToList();

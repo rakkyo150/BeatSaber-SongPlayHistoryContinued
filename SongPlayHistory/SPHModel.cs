@@ -1,9 +1,9 @@
-﻿using System;
+﻿using IPA.Utilities;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using IPA.Utilities;
-using Newtonsoft.Json;
 
 namespace SongPlayHistoryContinued
 {
@@ -58,15 +58,15 @@ namespace SongPlayHistoryContinued
 
         public static List<Record> GetRecords(IDifficultyBeatmap beatmap)
         {
-            var config = PluginConfig.Instance;
-            var beatmapCharacteristicName = beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic.serializedName;
-            var difficulty = $"{beatmap.level.levelID}___{(int)beatmap.difficulty}___{beatmapCharacteristicName}";
+            PluginConfig config = PluginConfig.Instance;
+            string beatmapCharacteristicName = beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic.serializedName;
+            string difficulty = $"{beatmap.level.levelID}___{(int)beatmap.difficulty}___{beatmapCharacteristicName}";
 
             if (Records.TryGetValue(difficulty, out IList<Record> records))
             {
                 // LastNote = -1 (cleared), 0 (undefined), n (failed)
-                var filtered = config.ShowFailed ? records : records.Where(s => s.LastNote <= 0);
-                var ordered = filtered.OrderByDescending(s => config.SortByDate ? s.Date : s.ModifiedScore);
+                IEnumerable<Record> filtered = config.ShowFailed ? records : records.Where(s => s.LastNote <= 0);
+                IOrderedEnumerable<Record> ordered = filtered.OrderByDescending(s => config.SortByDate ? s.Date : s.ModifiedScore);
                 return ordered.ToList();
             }
 
@@ -87,7 +87,7 @@ namespace SongPlayHistoryContinued
             }
 
             // We now keep failed records.
-            var cleared = result.levelEndStateType == LevelCompletionResults.LevelEndStateType.Cleared;
+            bool cleared = result.levelEndStateType == LevelCompletionResults.LevelEndStateType.Cleared;
 
             static Param ModsToParam(GameplayModifiers mods)
             {
@@ -111,22 +111,22 @@ namespace SongPlayHistoryContinued
             }
 
             // If submissionDisabled = true, we assume custom gameplay modifiers are applied.
-            var param = ModsToParam(result.gameplayModifiers);
+            Param param = ModsToParam(result.gameplayModifiers);
             param |= submissionDisabled ? Param.SubmissionDisabled : 0;
             param |= isMultiplayer ? Param.Multiplayer : 0;
 
-            var record = new Record
+            Record record = new Record
             {
                 Date = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                 ModifiedScore = result.modifiedScore,
                 RawScore = result.multipliedScore,
                 LastNote = cleared ? -1 : result.goodCutsCount + result.badCutsCount + result.missedCount,
                 Param = (int)param,
-                Miss = result.fullCombo?"FC":(result.missedCount+result.badCutsCount).ToString()
+                Miss = result.fullCombo ? "FC" : (result.missedCount + result.badCutsCount).ToString()
             };
 
-            var beatmapCharacteristicName = beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic.serializedName;
-            var difficulty = $"{beatmap.level.levelID}___{(int)beatmap.difficulty}___{beatmapCharacteristicName}";
+            string beatmapCharacteristicName = beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic.serializedName;
+            string difficulty = $"{beatmap.level.levelID}___{(int)beatmap.difficulty}___{beatmapCharacteristicName}";
 
             if (!Records.ContainsKey(difficulty))
             {
@@ -146,23 +146,23 @@ namespace SongPlayHistoryContinued
             {
                 return null;
             }
-            var playerDataModel = BeatSaberUI.LevelDetailViewController.GetField<PlayerDataModel, StandardLevelDetailViewController>("_playerDataModel");
-            var statsList = playerDataModel.playerData.levelsStatsData;
-            var stats = statsList.FirstOrDefault(x => x.Value.levelID == beatmap.level.levelID && x.Value.difficulty == beatmap.difficulty);
+            PlayerDataModel playerDataModel = BeatSaberUI.LevelDetailViewController.GetField<PlayerDataModel, StandardLevelDetailViewController>("_playerDataModel");
+            Dictionary<LevelKey, PlayerLevelStatsData> statsList = playerDataModel.playerData.levelsStatsData;
+            KeyValuePair<LevelKey, PlayerLevelStatsData> stats = statsList.FirstOrDefault(x => x.Value.levelID == beatmap.level.levelID && x.Value.difficulty == beatmap.difficulty);
             if (stats.Equals(default(KeyValuePair<int, string>)))
             {
                 Plugin.Log?.Warn($"{nameof(PlayerLevelStatsData)} not found for {beatmap.level.levelID} - {beatmap.difficulty}.");
             }
             return stats.Value;
         }
-        
+
         public static PlayerData GetPlayerData()
         {
             if (!BeatSaberUI.IsValid)
             {
                 return null;
             }
-            var playerDataModel = BeatSaberUI.LevelDetailViewController.GetField<PlayerDataModel, StandardLevelDetailViewController>("_playerDataModel");
+            PlayerDataModel playerDataModel = BeatSaberUI.LevelDetailViewController.GetField<PlayerDataModel, StandardLevelDetailViewController>("_playerDataModel");
             return playerDataModel.playerData;
         }
 
@@ -181,7 +181,7 @@ namespace SongPlayHistoryContinued
                 {
                     _voteLastWritten = File.GetLastWriteTime(VoteFile);
 
-                    var text = File.ReadAllText(VoteFile);
+                    string text = File.ReadAllText(VoteFile);
                     Votes = JsonConvert.DeserializeObject<Dictionary<string, UserVote>>(text) ?? new Dictionary<string, UserVote>();
 
                     Plugin.Log?.Info("Update done.");
@@ -202,7 +202,7 @@ namespace SongPlayHistoryContinued
             {
                 if (Records.Count > 0)
                 {
-                    var serialized = JsonConvert.SerializeObject(Records, Formatting.Indented);
+                    string serialized = JsonConvert.SerializeObject(Records, Formatting.Indented);
                     File.WriteAllText(DataFile, serialized);
                 }
             }
@@ -221,7 +221,7 @@ namespace SongPlayHistoryContinued
             }
 
             // Read records from a data file.
-            var text = File.ReadAllText(DataFile);
+            string text = File.ReadAllText(DataFile);
             try
             {
                 Records = JsonConvert.DeserializeObject<Dictionary<string, IList<Record>>>(text);
@@ -236,7 +236,7 @@ namespace SongPlayHistoryContinued
                 Plugin.Log?.Error(ex.ToString());
 
                 // Try to restore from a backup.
-                var backup = new FileInfo(Path.ChangeExtension(DataFile, ".bak"));
+                FileInfo backup = new FileInfo(Path.ChangeExtension(DataFile, ".bak"));
                 if (backup.Exists && backup.Length > 0)
                 {
                     Plugin.Log?.Info("Restoring from a backup...");
@@ -265,7 +265,7 @@ namespace SongPlayHistoryContinued
                 return;
             }
 
-            var backupFile = Path.ChangeExtension(DataFile, ".bak");
+            string backupFile = Path.ChangeExtension(DataFile, ".bak");
             try
             {
                 if (File.Exists(backupFile))
